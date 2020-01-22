@@ -62,7 +62,7 @@ class RequestEntityConverter implements ParamConverterInterface {
 
     if ($class instanceof IValidatableRequestEntity) {
       if (!$this->validator) {
-        throw new \Exception('You need to have symfony/validator installed to validate the request');
+        throw new \RuntimeException('You need to have symfony/validator installed to validate the request');
       }
 
       $violations = $this->inputValidation($class, $requestEntityOptions);
