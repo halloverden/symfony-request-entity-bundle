@@ -13,6 +13,8 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  */
 abstract class AbstractRequestEntity implements IRequestEntity {
 
+  const ALLOWED_PROPERTIES_FOR_PROPERTY = [];
+
   /**
    * @var Request
    */
@@ -80,6 +82,15 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
+   * @param string $property
+   *
+   * @return array|null
+   */
+  protected function getAllowedPropertiesForProperty(string $property): ?array {
+    return isset(static::ALLOWED_PROPERTIES_FOR_PROPERTY[$property]) ? static::ALLOWED_PROPERTIES_FOR_PROPERTY[$property] : null;
+  }
+
+  /**
    * @param array $data
    *
    * @throws \ReflectionException
@@ -109,6 +120,10 @@ abstract class AbstractRequestEntity implements IRequestEntity {
 
     if (!isset($data[$key])) {
       return;
+    }
+
+    if (($allowedProperties = $this->getAllowedPropertiesForProperty($key)) && is_array($data[$key])) {
+      $data[$key] = $this->fetchPropertiesArray($data[$key], $allowedProperties);
     }
 
     $property->setAccessible(true);
