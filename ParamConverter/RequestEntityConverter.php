@@ -105,7 +105,7 @@ class RequestEntityConverter implements ParamConverterInterface {
     $violations = $this->validator->validate($entity, null, $entity::getValidatorGroups());
 
     if (0 !== count($violations) && $requestEntityOptions->isThrowViolations()) {
-      throw new ValidationException('something');
+      throw new ValidationException($violations);
     }
 
     return $violations;
