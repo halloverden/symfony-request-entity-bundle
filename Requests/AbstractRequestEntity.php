@@ -185,4 +185,11 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   public static function getValidatorGroups(): array {
     return [];
   }
+
+  /**
+   * @return Request|null
+   */
+  public function getRequest(): ?Request {
+    return $this->_request;
+  }
 }
