@@ -3,6 +3,7 @@
 namespace HalloVerden\RequestEntityBundle\Requests;
 
 use HalloVerden\RequestEntityBundle\Interfaces\IRequestEntity;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 /**
@@ -11,6 +12,11 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  * @package HalloVerden\RequestEntityBundle\Requests
  */
 abstract class AbstractRequestEntity implements IRequestEntity {
+
+  /**
+   * @var Request
+   */
+  private $_request;
 
   /**
    * @var ConstraintViolationListInterface
@@ -25,10 +31,31 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   /**
    * AbstractRequestEntity constructor.
    *
+   * @param Request              $request
    * @param RequestEntityOptions $requestEntityOptions
    */
-  protected function __construct(RequestEntityOptions $requestEntityOptions) {
+  protected function __construct(Request $request, RequestEntityOptions $requestEntityOptions) {
+    $this->_request = $request;
     $this->_requestEntityOptions = $requestEntityOptions;
+  }
+
+  /**
+   * @param array                $data
+   * @param Request              $request
+   * @param RequestEntityOptions $requestEntityOptions
+   *
+   * @return IRequestEntity
+   *
+   * @throws \ReflectionException
+   */
+  public static function create(array $data, Request $request, RequestEntityOptions $requestEntityOptions): IRequestEntity {
+    if (static::class === self::class) {
+      throw new \RuntimeException('Run this from a class that extends this class');
+    }
+
+    $requestEntity = new static($request, $requestEntityOptions);
+    $requestEntity->setData($data);
+    return $requestEntity;
   }
 
   /**

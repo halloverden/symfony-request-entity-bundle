@@ -3,7 +3,7 @@
 namespace HalloVerden\RequestEntityBundle\ParamConverter;
 
 use HalloVerden\RequestEntityBundle\Exception\ValidationException;
-use HalloVerden\RequestEntityBundle\Interfaces\IBaseRequestEntity;
+use HalloVerden\RequestEntityBundle\Interfaces\IRequestEntity;
 use HalloVerden\RequestEntityBundle\Interfaces\IValidatableRequestEntity;
 use HalloVerden\RequestEntityBundle\Requests\RequestEntityOptions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -57,7 +57,7 @@ class RequestEntityConverter implements ParamConverterInterface {
     $data = $data ?: [];
 
     $requestEntityClass = $configuration->getClass();
-    /** @var IBaseRequestEntity $requestEntityClass */
+    /** @var IRequestEntity $requestEntityClass */
     $class = $requestEntityClass::create($data, $request, $requestEntityOptions);
 
     if ($class instanceof IValidatableRequestEntity) {
@@ -91,7 +91,7 @@ class RequestEntityConverter implements ParamConverterInterface {
       return false;
     }
 
-    return array_search(IBaseRequestEntity::class, $implements) !== false;
+    return array_search(IRequestEntity::class, $implements) !== false;
   }
 
   /**
