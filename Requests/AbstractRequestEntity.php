@@ -42,12 +42,7 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
-   * @param array                $data
-   * @param Request              $request
-   * @param RequestEntityOptions $requestEntityOptions
-   *
-   * @return IRequestEntity
-   *
+   * @inheritDoc
    * @throws \ReflectionException
    */
   public static function create(array $data, Request $request, RequestEntityOptions $requestEntityOptions): IRequestEntity {
@@ -61,6 +56,8 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
+   * Used if request implements IValidatableRequestEntity
+   *
    * @return null|ConstraintViolationListInterface
    */
   public function getRequestEntityViolations(): ?ConstraintViolationListInterface {
@@ -68,6 +65,8 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
+   * Used if request implements IValidatableRequestEntity
+   *
    * @param ConstraintViolationListInterface $violations
    */
   public function setRequestEntityViolations( ConstraintViolationListInterface $violations ): void {
@@ -75,7 +74,7 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
-   * @return RequestEntityOptions
+   * @inheritDoc
    */
   public function getRequestEntityOptions(): RequestEntityOptions {
     return $this->_requestEntityOptions;
@@ -172,7 +171,7 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
-   * @return array
+   * @inheritDoc
    * @throws \ReflectionException
    */
   public function getProperties(): array {
@@ -180,6 +179,8 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
+   * Used if request implements IValidatableRequestEntity
+   *
    * @return array
    */
   public static function getValidatorGroups(): array {
@@ -187,7 +188,7 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
-   * @return Request|null
+   * @inheritDoc
    */
   public function getRequest(): ?Request {
     return $this->_request;
