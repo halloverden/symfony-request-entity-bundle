@@ -3,7 +3,11 @@
 
 namespace HalloVerden\RequestEntityBundle\Requests;
 
-
+/**
+ * Class RequestEntityOptions
+ *
+ * @package HalloVerden\RequestEntityBundle\Requests
+ */
 class RequestEntityOptions {
   const DEFAULT_OPTIONS = [
     'combineQueryAndBody' => false,
