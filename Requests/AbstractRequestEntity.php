@@ -56,6 +56,28 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
+   * @inheritDoc
+   */
+  public function getRequest(): ?Request {
+    return $this->_request;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getRequestEntityOptions(): RequestEntityOptions {
+    return $this->_requestEntityOptions;
+  }
+
+  /**
+   * @inheritDoc
+   * @throws \ReflectionException
+   */
+  public function getProperties(): array {
+    return $this->fetchProperties($this);
+  }
+
+  /**
    * Used if request implements IValidatableRequestEntity
    *
    * @return null|ConstraintViolationListInterface
@@ -74,10 +96,12 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
-   * @inheritDoc
+   * Used if request implements IValidatableRequestEntity
+   *
+   * @return array
    */
-  public function getRequestEntityOptions(): RequestEntityOptions {
-    return $this->_requestEntityOptions;
+  public static function getValidatorGroups(): array {
+    return [];
   }
 
   /**
@@ -106,30 +130,6 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
-   * @param array               $data
-   * @param \ReflectionProperty $property
-   */
-  private function setDataOnProperty(array $data, \ReflectionProperty $property): void {
-    $key = $property->getName();
-
-    // Ignore properties that start with _
-    if ($key[0] === '_') {
-      return;
-    }
-
-    if (!isset($data[$key])) {
-      return;
-    }
-
-    if (($allowedProperties = $this->getAllowedPropertiesForProperty($key)) && is_array($data[$key])) {
-      $data[$key] = $this->fetchPropertiesArray($data[$key], $allowedProperties);
-    }
-
-    $property->setAccessible(true);
-    $property->setValue($this, $data[$key]);
-  }
-
-  /**
    * @param array $data
    * @param array $propsToGet
    *
@@ -154,7 +154,7 @@ abstract class AbstractRequestEntity implements IRequestEntity {
    * @return array
    * @throws \ReflectionException
    */
-  public function fetchProperties($object, array $propsToGet = null): array {
+  protected function fetchProperties($object, array $propsToGet = null): array {
     $props = [];
 
     $reflectionClass = new \ReflectionClass($object);
@@ -171,26 +171,27 @@ abstract class AbstractRequestEntity implements IRequestEntity {
   }
 
   /**
-   * @inheritDoc
-   * @throws \ReflectionException
+   * @param array               $data
+   * @param \ReflectionProperty $property
    */
-  public function getProperties(): array {
-    return $this->fetchProperties($this);
+  private function setDataOnProperty(array $data, \ReflectionProperty $property): void {
+    $key = $property->getName();
+
+    // Ignore properties that start with _
+    if ($key[0] === '_') {
+      return;
+    }
+
+    if (!isset($data[$key])) {
+      return;
+    }
+
+    if (($allowedProperties = $this->getAllowedPropertiesForProperty($key)) && is_array($data[$key])) {
+      $data[$key] = $this->fetchPropertiesArray($data[$key], $allowedProperties);
+    }
+
+    $property->setAccessible(true);
+    $property->setValue($this, $data[$key]);
   }
 
-  /**
-   * Used if request implements IValidatableRequestEntity
-   *
-   * @return array
-   */
-  public static function getValidatorGroups(): array {
-    return [];
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getRequest(): ?Request {
-    return $this->_request;
-  }
 }
