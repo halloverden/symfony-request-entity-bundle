@@ -2,7 +2,7 @@
 
 namespace HalloVerden\RequestEntityBundle\Requests;
 
-use HalloVerden\RequestEntityBundle\Interfaces\IRequestEntity;
+use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * @package HalloVerden\RequestEntityBundle\Requests
  */
-abstract class AbstractRequestEntity implements IRequestEntity {
+abstract class AbstractRequestEntityInterface implements RequestEntityInterface {
 
   const ALLOWED_PROPERTIES_FOR_PROPERTY = [];
 
@@ -45,7 +45,7 @@ abstract class AbstractRequestEntity implements IRequestEntity {
    * @inheritDoc
    * @throws \ReflectionException
    */
-  public static function create(array $data, Request $request, RequestEntityOptions $requestEntityOptions): IRequestEntity {
+  public static function create(array $data, Request $request, RequestEntityOptions $requestEntityOptions): RequestEntityInterface {
     if (static::class === self::class) {
       throw new \RuntimeException('Run this from a class that extends this class');
     }

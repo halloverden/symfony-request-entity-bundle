@@ -5,7 +5,7 @@ namespace HalloVerden\RequestEntityBundle\Interfaces;
 use HalloVerden\RequestEntityBundle\Requests\RequestEntityOptions;
 use Symfony\Component\HttpFoundation\Request;
 
-interface IRequestEntity {
+interface RequestEntityInterface {
 
   /**
    * @param array                $data

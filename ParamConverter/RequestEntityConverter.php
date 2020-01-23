@@ -3,8 +3,8 @@
 namespace HalloVerden\RequestEntityBundle\ParamConverter;
 
 use HalloVerden\RequestEntityBundle\Exception\ValidationException;
-use HalloVerden\RequestEntityBundle\Interfaces\IRequestEntity;
-use HalloVerden\RequestEntityBundle\Interfaces\IValidatableRequestEntity;
+use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityInterface;
+use HalloVerden\RequestEntityBundle\Interfaces\ValidatableRequestEntityInterface;
 use HalloVerden\RequestEntityBundle\Requests\RequestEntityOptions;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
@@ -57,10 +57,10 @@ class RequestEntityConverter implements ParamConverterInterface {
     $data = $data ?: [];
 
     $requestEntityClass = $configuration->getClass();
-    /** @var IRequestEntity $requestEntityClass */
+    /** @var RequestEntityInterface $requestEntityClass */
     $class = $requestEntityClass::create($data, $request, $requestEntityOptions);
 
-    if ($class instanceof IValidatableRequestEntity) {
+    if ($class instanceof ValidatableRequestEntityInterface) {
       if (!$this->validator) {
         throw new \RuntimeException('You need to have symfony/validator installed to validate the request');
       }
@@ -91,17 +91,17 @@ class RequestEntityConverter implements ParamConverterInterface {
       return false;
     }
 
-    return array_search(IRequestEntity::class, $implements) !== false;
+    return array_search(RequestEntityInterface::class, $implements) !== false;
   }
 
   /**
-   * @param IValidatableRequestEntity $entity
-   * @param RequestEntityOptions      $requestEntityOptions
+   * @param ValidatableRequestEntityInterface $entity
+   * @param RequestEntityOptions              $requestEntityOptions
    *
    * @return ConstraintViolationListInterface
    * @throws ValidationException
    */
-  private function inputValidation(IValidatableRequestEntity $entity, RequestEntityOptions $requestEntityOptions): ConstraintViolationListInterface {
+  private function inputValidation(ValidatableRequestEntityInterface $entity, RequestEntityOptions $requestEntityOptions): ConstraintViolationListInterface {
     $violations = $this->validator->validate($entity, null, $entity::getValidatorGroups());
 
     if (0 !== count($violations) && $requestEntityOptions->isThrowViolations()) {
