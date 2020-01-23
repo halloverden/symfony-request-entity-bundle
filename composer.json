@@ -1,0 +1,29 @@
+{
+    "name": "halloverden/symfony-request-entity-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony request entity bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tom Roar Furunes",
+            "email": "tom.roar@halloverden.no"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^7.2",
+        "sensio/framework-extra-bundle": "^5.5"
+    },
+    "suggest": {
+        "symfony/validator": "Validate requests"
+    },
+    "autoload": {
+        "psr-4": {
+            "HalloVerden\\RequestEntityBundle\\": ""
+        }
+    },
+    "require-dev": {
+        "symfony/validator": "^5.0"
+    }
+}
