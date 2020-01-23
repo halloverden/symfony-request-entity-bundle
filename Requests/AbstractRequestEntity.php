@@ -11,7 +11,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
  *
  * @package HalloVerden\RequestEntityBundle\Requests
  */
-abstract class AbstractRequestEntityInterface implements RequestEntityInterface {
+abstract class AbstractRequestEntity implements RequestEntityInterface {
 
   const ALLOWED_PROPERTIES_FOR_PROPERTY = [];
 
