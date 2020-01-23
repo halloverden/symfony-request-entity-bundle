@@ -6,7 +6,7 @@ namespace HalloVerden\RequestEntityBundle\Interfaces;
 
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
-interface IValidatableRequestEntity {
+interface ValidatableRequestEntityInterface {
 
   /**
    * @return ConstraintViolationListInterface|null
