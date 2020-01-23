@@ -13,7 +13,9 @@
     "prefer-stable": true,
     "require": {
         "php": "^7.2",
-        "sensio/framework-extra-bundle": "^5.5"
+        "sensio/framework-extra-bundle": "^5.5",
+        "halloverden/symfony-http-exceptions": "^0.1.1",
+        "ext-json": "*"
     },
     "suggest": {
         "symfony/validator": "Validate requests"
@@ -24,6 +26,6 @@
         }
     },
     "require-dev": {
-        "symfony/validator": "^5.0"
+        "symfony/validator": "^4.4|^5.0"
     }
 }

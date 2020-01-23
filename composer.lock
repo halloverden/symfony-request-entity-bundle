@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cfce8e86774b88e20ff6b568d3470d30",
+    "content-hash": "2097143ec839acc99e4527c37c3638ee",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -135,6 +135,43 @@
                 "php"
             ],
             "time": "2019-10-30T14:39:59+00:00"
+        },
+        {
+            "name": "halloverden/symfony-http-exceptions",
+            "version": "0.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/halloverden/symfony-http-exceptions.git",
+                "reference": "e66409acf8d3210ec4ba826bf38f38371103b866"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/halloverden/symfony-http-exceptions/zipball/e66409acf8d3210ec4ba826bf38f38371103b866",
+                "reference": "e66409acf8d3210ec4ba826bf38f38371103b866",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2",
+                "symfony/http-kernel": "^4.4|^5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "HalloVerden\\HttpExceptions\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Roar Furunes",
+                    "email": "tom.roar@halloverden.no"
+                }
+            ],
+            "description": "Symfony HTTP Expcetions",
+            "time": "2020-01-23T12:56:51+00:00"
         },
         {
             "name": "psr/cache",
@@ -2020,7 +2057,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2"
+        "php": "^7.2",
+        "ext-json": "*"
     },
     "platform-dev": []
 }
