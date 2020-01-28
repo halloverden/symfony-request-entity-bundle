@@ -26,6 +26,7 @@
         }
     },
     "require-dev": {
-        "symfony/validator": "^4.4|^5.0"
+        "symfony/validator": "^4.4|^5.0",
+        "jms/serializer": "^3.4"
     }
 }
