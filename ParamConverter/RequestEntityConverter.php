@@ -2,7 +2,7 @@
 
 namespace HalloVerden\RequestEntityBundle\ParamConverter;
 
-use HalloVerden\RequestEntityBundle\Exception\ValidationException;
+use HalloVerden\HttpExceptions\Utility\ValidationException;
 use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityInterface;
 use HalloVerden\RequestEntityBundle\Interfaces\ValidatableRequestEntityInterface;
 use HalloVerden\RequestEntityBundle\Requests\RequestEntityOptions;
