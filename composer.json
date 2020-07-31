@@ -14,7 +14,7 @@
     "require": {
         "php": "^7.2",
         "sensio/framework-extra-bundle": "^5.5",
-        "halloverden/symfony-http-exceptions": "^0.4",
+        "halloverden/symfony-http-exceptions": "^1.0",
         "ext-json": "*"
     },
     "suggest": {
