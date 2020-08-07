@@ -13,9 +13,11 @@
     "prefer-stable": true,
     "require": {
         "php": "^7.2",
+        "ext-json": "*",
         "sensio/framework-extra-bundle": "^5.5",
         "halloverden/symfony-http-exceptions": "^0.3.0",
-        "ext-json": "*"
+        "jms/serializer-bundle": "^3.7",
+        "symfony/validator": "^4.4|^5.0"
     },
     "suggest": {
         "symfony/validator": "Validate requests"
@@ -24,9 +26,5 @@
         "psr-4": {
             "HalloVerden\\RequestEntityBundle\\": ""
         }
-    },
-    "require-dev": {
-        "symfony/validator": "^4.4|^5.0",
-        "jms/serializer": "^3.4"
     }
 }
