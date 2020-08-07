@@ -2,14 +2,11 @@
 
 namespace HalloVerden\RequestEntityBundle\DependencyInjection;
 
-use HalloVerden\RequestEntityBundle\EventListener\DeserializableRequestEntityListener;
-use HalloVerden\RequestEntityBundle\ParamConverter\RequestEntityConverter;
+use HalloVerden\RequestEntityBundle\EventListener\JsonRequestSubscriber;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use JMS\Serializer\SerializerInterface;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class HalloVerdenRequestEntityExtension extends Extension {
 
@@ -18,28 +15,13 @@ class HalloVerdenRequestEntityExtension extends Extension {
    * @throws \Exception
    */
   public function load(array $configs, ContainerBuilder $container) {
-    $arguments = [];
+    $config = $this->processConfiguration(new Configuration(), $configs);
 
-    if (interface_exists(ValidatorInterface::class)) {
-      $arguments['$validator'] = new Reference(ValidatorInterface::class);
-    }
+    $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+    $loader->load('services.yaml');
 
-    $requestEntityConverter = new Definition(RequestEntityConverter::class, $arguments);
-
-    $requestEntityConverter->addTag('request.param_converter', [
-      'converter' => RequestEntityConverter::class
-    ]);
-
-    $container->setDefinition(RequestEntityConverter::class, $requestEntityConverter);
-
-    if (interface_exists(SerializerInterface::class)) {
-      $deserializableRequestEntityListener = new Definition(DeserializableRequestEntityListener::class, [
-        '$serializer' => new Reference(SerializerInterface::class)
-      ]);
-
-      $deserializableRequestEntityListener->addTag('kernel.event_subscriber');
-
-      $container->setDefinition(DeserializableRequestEntityListener::class, $deserializableRequestEntityListener);
+    if (!$config['decode_json_requests']) {
+      $container->removeDefinition(JsonRequestSubscriber::class);
     }
   }
 

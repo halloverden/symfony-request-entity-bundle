@@ -1,0 +1,2 @@
+hallo_verden_request_entity:
+    decode_json_requests: true
