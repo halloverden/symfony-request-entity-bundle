@@ -3,14 +3,15 @@
 namespace HalloVerden\RequestEntityBundle\ParamConverter;
 
 use HalloVerden\HttpExceptions\Utility\ValidationException;
+use HalloVerden\RequestEntityBundle\Event\PreRequestEntityDeserializationEvent;
 use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityInterface;
-use HalloVerden\RequestEntityBundle\Interfaces\ValidatableRequestEntityInterface;
 use HalloVerden\RequestEntityBundle\Requests\RequestEntityOptions;
+use JMS\Serializer\SerializerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class RequestEntityConverter
@@ -19,27 +20,68 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class RequestEntityConverter implements ParamConverterInterface {
 
   /**
-   * @var ValidatorInterface
+   * @var SerializerInterface
+   */
+  private $serializer;
+
+  /**
+   * @var EventDispatcherInterface
+   */
+  private $dispatcher;
+
+  /**
+   * @var ValidatorInterface|null
    */
   private $validator;
 
   /**
    * RequestEntityConverter constructor.
    *
-   * @param ValidatorInterface $validator
+   * @param SerializerInterface      $serializer
+   * @param EventDispatcherInterface $dispatcher
+   * @param ValidatorInterface  $validator
    */
-  public function __construct(ValidatorInterface $validator = null ) {
+  public function __construct(SerializerInterface $serializer, EventDispatcherInterface $dispatcher, ValidatorInterface $validator) {
+    $this->serializer = $serializer;
+    $this->dispatcher = $dispatcher;
     $this->validator = $validator;
   }
 
   /**
    * @inheritDoc
-   * @throws ValidationException
+   */
+  public function supports( ParamConverter $configuration ) {
+    return \is_subclass_of($configuration->getClass(), RequestEntityInterface::class);
+  }
+
+  /**
+   * @inheritDoc
    */
   public function apply( Request $request, ParamConverter $configuration ) {
-    $requestEntityOptions = isset($configuration->getOptions()['requestEntityOptions']) ?
-      new RequestEntityOptions($configuration->getOptions()['requestEntityOptions']) : new RequestEntityOptions();
+    /** @var RequestEntityInterface $requestEntityClass only as string! */
+    $requestEntityClass = $configuration->getClass();
 
+    $requestEntityOptions = $requestEntityClass::createRequestEntityOptions();
+
+    $data = $this->createDataArray($request, $configuration, $requestEntityOptions);
+
+    $this->validateData($requestEntityClass, $data);
+
+    $requestEntity = $this->createRequestEntity($request, $requestEntityClass, $data);
+
+    $request->attributes->set($configuration->getName(), $requestEntity);
+
+    return true;
+  }
+
+  /**
+   * @param Request              $request
+   * @param ParamConverter       $configuration
+   * @param RequestEntityOptions $requestEntityOptions
+   *
+   * @return array
+   */
+  private function createDataArray(Request $request, ParamConverter $configuration, RequestEntityOptions $requestEntityOptions): array {
     $data = $request->request->get( $configuration->getName() );
 
     if ( $requestEntityOptions->getRootElement() ) {
@@ -54,61 +96,48 @@ class RequestEntityConverter implements ParamConverterInterface {
       $data = array_merge($request->query->all(), ($data ?: []));
     }
 
-    $data = $data ?: [];
-
-    $requestEntityClass = $configuration->getClass();
-    /** @var RequestEntityInterface $requestEntityClass */
-    $class = $requestEntityClass::create($data, $request, $requestEntityOptions);
-
-    if ($class instanceof ValidatableRequestEntityInterface) {
-      if (!$this->validator) {
-        throw new \RuntimeException('You need to have symfony/validator installed to validate the request');
-      }
-
-      $violations = $this->inputValidation($class, $requestEntityOptions);
-
-      if (0 !== count($violations)) {
-        $class->setRequestEntityViolations($violations);
-      }
-    }
-
-    $request->attributes->set($configuration->getName(), $class);
-
-    return true;
+    return $data ?: [];
   }
 
   /**
-   * @inheritDoc
+   * @param string $requestEntityClass
+   * @param array  $data
    */
-  public function supports( ParamConverter $configuration ) {
-    if (!class_exists($configuration->getClass())) {
-      return false;
-    }
+  private function validateData(string $requestEntityClass, array $data): void {
+    /** @var RequestEntityInterface $requestEntityClass only as string! */
+    $validationOptions = $requestEntityClass::createRequestDataValidationOptions();
 
-    $implements = class_implements($configuration->getClass());
+    $violations = $this->validator->validate($data, $validationOptions->getDataConstraint(), $validationOptions->getDataValidatorGroups());
 
-    if (!$implements) {
-      return false;
-    }
-
-    return array_search(RequestEntityInterface::class, $implements) !== false;
-  }
-
-  /**
-   * @param ValidatableRequestEntityInterface $entity
-   * @param RequestEntityOptions              $requestEntityOptions
-   *
-   * @return ConstraintViolationListInterface
-   * @throws ValidationException
-   */
-  private function inputValidation(ValidatableRequestEntityInterface $entity, RequestEntityOptions $requestEntityOptions): ConstraintViolationListInterface {
-    $violations = $this->validator->validate($entity, null, $entity::getValidatorGroups());
-
-    if (0 !== count($violations) && $requestEntityOptions->isThrowViolations()) {
+    if (0 !== count($violations)) {
       throw new ValidationException($violations);
     }
+  }
 
-    return $violations;
+  /**
+   * @param Request $request
+   * @param string  $requestEntityClass
+   * @param array   $data
+   *
+   * @return RequestEntityInterface
+   */
+  private function createRequestEntity(Request $request, string $requestEntityClass, array $data): RequestEntityInterface {
+    /** @var RequestEntityInterface $requestEntityClass only as string! */
+    $context = $requestEntityClass::createDeserializationContext();
+
+    $event = new PreRequestEntityDeserializationEvent(
+      $context,
+      $requestEntityClass,
+      $data
+    );
+    $this->dispatcher->dispatch($event);
+
+    /** @var RequestEntityInterface $requestEntity */
+    $requestEntity = $this->serializer->deserialize(json_encode($event->getData()), $event->getClass(), 'json', $event->getContext());
+
+    $requestEntity->setRequest($request);
+
+    return $requestEntity;
   }
 
 }
