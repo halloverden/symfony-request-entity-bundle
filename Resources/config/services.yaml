@@ -1,0 +1,12 @@
+services:
+    HalloVerden\RequestEntityBundle\ParamConverter\RequestEntityConverter:
+        arguments:
+            $serializer: '@jms_serializer.serializer'
+            $dispatcher: '@event_dispatcher'
+            $validator: '@validator'
+        tags:
+            - { name: request.param_converter, converter: HalloVerden\RequestEntityBundle\ParamConverter\RequestEntityConverter }
+
+    HalloVerden\RequestEntityBundle\EventListener\JsonRequestSubscriber:
+        tags:
+            - { name: 'kernel.event_subscriber' }
