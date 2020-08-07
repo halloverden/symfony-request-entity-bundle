@@ -3,18 +3,15 @@
 namespace HalloVerden\RequestEntityBundle\Interfaces;
 
 use HalloVerden\RequestEntityBundle\Requests\RequestEntityOptions;
+use JMS\Serializer\DeserializationContext;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Interface RequestEntityInterface
+ *
+ * @package HalloVerden\RequestEntityBundle\Interfaces
+ */
 interface RequestEntityInterface {
-
-  /**
-   * @param array                $data
-   * @param Request              $request
-   * @param RequestEntityOptions $requestEntityOptions
-   *
-   * @return static
-   */
-  public static function create(array $data, Request $request, RequestEntityOptions $requestEntityOptions): self;
 
   /**
    * @return Request|null
@@ -22,12 +19,23 @@ interface RequestEntityInterface {
   public function getRequest(): ?Request;
 
   /**
-   * @return RequestEntityOptions
+   * @param Request $request
    */
-  public function getRequestEntityOptions(): RequestEntityOptions;
+  public function setRequest(Request $request): void;
 
   /**
-   * @return array
+   * @return RequestEntityOptions
    */
-  public function getProperties(): array;
+  public static function createRequestEntityOptions(): RequestEntityOptions;
+
+  /**
+   * @return DeserializationContext
+   */
+  public static function createDeserializationContext(): DeserializationContext;
+
+  /**
+   * @return RequestDataValidationOptionsInterface
+   */
+  public static function createRequestDataValidationOptions(): RequestDataValidationOptionsInterface;
+
 }
