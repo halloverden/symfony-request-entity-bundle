@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63a2401ee430915083f7cb815d691928",
+    "content-hash": "45b36b40b66cfbbefb810a3c4a49d784",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -223,16 +223,16 @@
         },
         {
             "name": "halloverden/symfony-http-exceptions",
-            "version": "0.3.3",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/halloverden/symfony-http-exceptions.git",
-                "reference": "75957c71e5683d7444098ca2d51643ca971ed9cc"
+                "reference": "0e0c8f23356b6f56b8349f45a5785081a4217fba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/halloverden/symfony-http-exceptions/zipball/75957c71e5683d7444098ca2d51643ca971ed9cc",
-                "reference": "75957c71e5683d7444098ca2d51643ca971ed9cc",
+                "url": "https://api.github.com/repos/halloverden/symfony-http-exceptions/zipball/0e0c8f23356b6f56b8349f45a5785081a4217fba",
+                "reference": "0e0c8f23356b6f56b8349f45a5785081a4217fba",
                 "shasum": ""
             },
             "require": {
@@ -260,7 +260,7 @@
                 }
             ],
             "description": "Symfony HTTP Expcetions",
-            "time": "2020-04-06T09:40:05+00:00"
+            "time": "2020-07-31T16:52:16+00:00"
         },
         {
             "name": "jms/metadata",
