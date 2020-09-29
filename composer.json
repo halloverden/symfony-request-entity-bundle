@@ -16,8 +16,8 @@
         "ext-json": "*",
         "sensio/framework-extra-bundle": "^5.5",
         "jms/serializer-bundle": "^3.7",
-        "symfony/validator": "^4.4|^5.0",
-        "halloverden/symfony-http-exceptions": "^1.0"
+        "symfony/validator": "^4.4.13|^5.1.5",
+        "halloverden/symfony-http-exceptions": "^1.0.1"
     },
     "suggest": {
         "symfony/validator": "Validate requests"
