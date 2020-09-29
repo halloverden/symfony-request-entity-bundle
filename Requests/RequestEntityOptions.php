@@ -16,11 +16,6 @@ class RequestEntityOptions {
   private $combineQueryAndBody = false;
 
   /**
-   * @var boolean
-   */
-  private $preventEntireBody = false;
-
-  /**
    * @var string|null
    */
   private $rootElement = null;
@@ -46,23 +41,6 @@ class RequestEntityOptions {
    */
   public function setCombineQueryAndBody(bool $combineQueryAndBody): self {
     $this->combineQueryAndBody = $combineQueryAndBody;
-    return $this;
-  }
-
-  /**
-   * @return bool
-   */
-  public function preventEntireBody(): bool {
-    return $this->preventEntireBody;
-  }
-
-  /**
-   * @param bool $preventEntireBody
-   *
-   * @return self
-   */
-  public function setPreventEntireBody(bool $preventEntireBody): self {
-    $this->preventEntireBody = $preventEntireBody;
     return $this;
   }
 
