@@ -1,6 +1,6 @@
 HalloVerdenRequestEntityBundle
 ==============================
-Deserializes a request to a entity.
+Deserializes a request to an entity.
 
 Installation
 ============
