@@ -112,7 +112,7 @@ Usage
    }
    ```
    Override the `getRequestDataValidationFields` method to validate the request data.
-   These validation rules must match the incoming request which is an array (i.e after decoding a json request)
+   These validation rules must match the incoming request which is an array (i.e. after decoding a json request)
 
  2. In your controller inject this request class using the paramconverter. Example:
     ```php
