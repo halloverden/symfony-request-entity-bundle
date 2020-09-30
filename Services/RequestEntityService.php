@@ -8,7 +8,6 @@ use HalloVerden\HttpExceptions\Utility\ValidationException;
 use HalloVerden\RequestEntityBundle\Event\PreRequestEntityDeserializationEvent;
 use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityInterface;
 use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityServiceInterface;
-use HalloVerden\RequestEntityBundle\Requests\RequestEntityOptions;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -57,22 +56,23 @@ class RequestEntityService implements RequestEntityServiceInterface {
       throw new \LogicException(\sprintf('%s is not subclass of %s', $requestEntityClass, RequestEntityInterface::class));
     }
 
-    $requestEntityOptions = $requestEntityClass::createRequestEntityOptions();
+    $data = $this->createDataArray($request, $requestEntityClass);
 
-    $data = $this->createDataArray($request, $requestEntityOptions);
+    $this->validateData($data, $requestEntityClass);
 
-    $this->validateData($requestEntityClass, $data);
-
-    return $this->_createRequestEntity($request, $requestEntityClass, $data);
+    return $this->_createRequestEntity($data, $request, $requestEntityClass);
   }
 
   /**
-   * @param Request              $request
-   * @param RequestEntityOptions $requestEntityOptions
+   * @param Request $request
+   * @param string  $requestEntityClass
    *
    * @return array
    */
-  private function createDataArray(Request $request, RequestEntityOptions $requestEntityOptions): array {
+  private function createDataArray(Request $request, string $requestEntityClass): array {
+    /** @var RequestEntityInterface $requestEntityClass only as string! */
+    $requestEntityOptions = $requestEntityClass::createRequestEntityOptions();
+
     if (null !== $rootElement = $requestEntityOptions->getRootElement()) {
       $data = $request->request->get( $rootElement ) ?? [];
     } else {
@@ -83,14 +83,14 @@ class RequestEntityService implements RequestEntityServiceInterface {
       $data = array_merge($request->query->all(), $data);
     }
 
-    return $data;
+    return $this->filterData($data, $requestEntityClass);
   }
 
   /**
-   * @param string $requestEntityClass
    * @param array  $data
+   * @param string $requestEntityClass
    */
-  private function validateData(string $requestEntityClass, array $data): void {
+  private function validateData(array $data, string $requestEntityClass): void {
     /** @var RequestEntityInterface $requestEntityClass only as string! */
     $validationOptions = $requestEntityClass::createRequestDataValidationOptions();
 
@@ -102,13 +102,13 @@ class RequestEntityService implements RequestEntityServiceInterface {
   }
 
   /**
+   * @param array   $data
    * @param Request $request
    * @param string  $requestEntityClass
-   * @param array   $data
    *
    * @return RequestEntityInterface
    */
-  private function _createRequestEntity(Request $request, string $requestEntityClass, array $data): RequestEntityInterface {
+  private function _createRequestEntity(array $data, Request $request, string $requestEntityClass): RequestEntityInterface {
     /** @var RequestEntityInterface $requestEntityClass only as string! */
     $context = $requestEntityClass::createDeserializationContext();
 
@@ -125,6 +125,44 @@ class RequestEntityService implements RequestEntityServiceInterface {
     $requestEntity->setRequest($request);
 
     return $requestEntity;
+  }
+
+  /**
+   * @param array  $data
+   * @param string $requestEntityClass
+   *
+   * @return array
+   */
+  private function filterData(array $data, string $requestEntityClass): array {
+    /** @var RequestEntityInterface $requestEntityClass only as string! */
+    $allowedAttributes = $requestEntityClass::getAllowedAttributes();
+
+    // if null, allow everything.
+    if (null === $allowedAttributes) {
+      return $data;
+    }
+
+    return $this->_filterData($data, $allowedAttributes);
+  }
+
+  /**
+   * @param array $data
+   * @param array $allowedAttributes
+   *
+   * @return array
+   */
+  private function _filterData(array $data, array $allowedAttributes): array {
+    $filteredData = [];
+
+    foreach ($data as $key => $value) {
+      if (in_array($key, $allowedAttributes, true)) {
+        $filteredData[$key] = $value;
+      } elseif (isset($allowedAttributes[$key]) && is_array($allowedAttributes[$key]) && is_array($value)) {
+        $filteredData[$key] = $this->_filterData($value, $allowedAttributes[$key]);
+      }
+    }
+
+    return $filteredData;
   }
 
 }

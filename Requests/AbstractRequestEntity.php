@@ -2,9 +2,12 @@
 
 namespace HalloVerden\RequestEntityBundle\Requests;
 
+use HalloVerden\RequestEntityBundle\Helpers\CollectionConstraintHelper;
+use HalloVerden\RequestEntityBundle\Interfaces\RequestDataValidationOptionsInterface;
 use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityInterface;
 use JMS\Serializer\DeserializationContext;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Validator\Constraints\Collection;
 
 /**
  * Class AbstractRequestEntity
@@ -17,6 +20,11 @@ abstract class AbstractRequestEntity implements RequestEntityInterface {
    * @var Request
    */
   private $_request;
+
+  /**
+   * @var Collection|null
+   */
+  private static $_collectionConstraint = null;
 
   /**
    * @inheritDoc
@@ -44,6 +52,38 @@ abstract class AbstractRequestEntity implements RequestEntityInterface {
    */
   public static function createDeserializationContext(): DeserializationContext {
     return DeserializationContext::create();
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public static function createRequestDataValidationOptions(): RequestDataValidationOptionsInterface {
+    return new RequestDataValidationOptions(static::getCollectionConstraint() ?: new Collection(['fields' => []]));
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public static function getAllowedAttributes(): ?array {
+    if ($collectionConstraint = static::getCollectionConstraint()) {
+      return CollectionConstraintHelper::getFields($collectionConstraint);
+    }
+
+    return null;
+  }
+
+  /**
+   * @return Collection|null
+   */
+  protected final static function getCollectionConstraint(): ?Collection {
+    return static::$_collectionConstraint ?: static::$_collectionConstraint = static::createCollectionConstraint();
+  }
+
+  /**
+   * @return Collection|null
+   */
+  protected static function createCollectionConstraint(): ?Collection {
+    return null;
   }
 
 }

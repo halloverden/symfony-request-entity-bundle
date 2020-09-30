@@ -38,4 +38,9 @@ interface RequestEntityInterface {
    */
   public static function createRequestDataValidationOptions(): RequestDataValidationOptionsInterface;
 
+  /**
+   * @return array|null
+   */
+  public static function getAllowedAttributes(): ?array;
+
 }
