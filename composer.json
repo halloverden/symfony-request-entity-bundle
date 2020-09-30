@@ -19,9 +19,6 @@
         "symfony/validator": "^4.4.13|^5.1.5",
         "halloverden/symfony-http-exceptions": "^1.0.1"
     },
-    "suggest": {
-        "symfony/validator": "Validate requests"
-    },
     "autoload": {
         "psr-4": {
             "HalloVerden\\RequestEntityBundle\\": ""
