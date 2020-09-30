@@ -22,11 +22,6 @@ abstract class AbstractRequestEntity implements RequestEntityInterface {
   private $_request;
 
   /**
-   * @var Collection|null
-   */
-  private static $_collectionConstraint = null;
-
-  /**
    * @inheritDoc
    */
   public function getRequest(): ?Request {
@@ -75,14 +70,7 @@ abstract class AbstractRequestEntity implements RequestEntityInterface {
   /**
    * @return Collection|null
    */
-  protected final static function getCollectionConstraint(): ?Collection {
-    return static::$_collectionConstraint ?: static::$_collectionConstraint = static::createCollectionConstraint();
-  }
-
-  /**
-   * @return Collection|null
-   */
-  protected static function createCollectionConstraint(): ?Collection {
+  protected static function getCollectionConstraint(): ?Collection {
     return null;
   }
 
