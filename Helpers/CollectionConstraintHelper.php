@@ -26,9 +26,9 @@ class CollectionConstraintHelper {
       if (\is_array($constraint) && $nestedCollection = self::getCollectionConstraint($constraint)) {
         $fields[$field] = self::getFields($nestedCollection);
       } elseif ($constraint instanceof Existence && $nestedCollection = self::getCollectionConstraint($constraint->constraints)) {
-        $field[$field] = self::getFields($nestedCollection);
+        $fields[$field] = self::getFields($nestedCollection);
       } elseif ($constraint instanceof Collection) {
-        $field[$field] = self::getFields($constraint);
+        $fields[$field] = self::getFields($constraint);
       } else {
         $fields[] = $field;
       }
