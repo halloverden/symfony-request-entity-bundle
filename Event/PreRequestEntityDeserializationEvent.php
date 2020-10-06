@@ -45,6 +45,16 @@ class PreRequestEntityDeserializationEvent extends Event {
   }
 
   /**
+   * @param DeserializationContext $context
+   *
+   * @return self
+   */
+  public function setContext(DeserializationContext $context): self {
+    $this->context = $context;
+    return $this;
+  }
+
+  /**
    * @return string
    */
   public function getClass(): string {
@@ -52,10 +62,30 @@ class PreRequestEntityDeserializationEvent extends Event {
   }
 
   /**
+   * @param string $class
+   *
+   * @return self
+   */
+  public function setClass(string $class): self {
+    $this->class = $class;
+    return $this;
+  }
+
+  /**
    * @return array
    */
   public function getData(): array {
     return $this->data;
+  }
+
+  /**
+   * @param array $data
+   *
+   * @return self
+   */
+  public function setData(array $data): self {
+    $this->data = $data;
+    return $this;
   }
 
 }
