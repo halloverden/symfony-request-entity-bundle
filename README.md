@@ -15,7 +15,7 @@ Applications that use Symfony Flex
 Open a command console, enter your project directory and execute:
 
 ```console
-$ composer require halloverden/request-entity-bundle
+$ composer require halloverden/symfony-request-entity-bundle
 ```
 
 Applications that don't use Symfony Flex
