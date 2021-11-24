@@ -71,7 +71,7 @@ class RequestEntityService implements RequestEntityServiceInterface {
    * @return array
    */
   private function createDataArray(Request $request, string $requestEntityClass): array {
-    /** @var RequestEntityInterface $requestEntityClass only as string! */
+    /** @var RequestEntityInterface|string $requestEntityClass */
     $requestEntityOptions = $requestEntityClass::createRequestEntityOptions();
 
     if (null !== $rootElement = $requestEntityOptions->getRootElement()) {
