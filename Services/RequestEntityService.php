@@ -128,8 +128,8 @@ class RequestEntityService implements RequestEntityServiceInterface {
     if ($requestEntity instanceof PostDeserializeValidationInterface) {
       $violations = $this->validator->validate(
         $requestEntity,
-        $requestEntity->getPostDeserializeValidationOptions()->getDataConstraint(),
-        $requestEntity->getPostDeserializeValidationOptions()->getDataValidatorGroups()
+        null,
+        $requestEntity->getDataValidatorGroups()
       );
 
       if (0 !== count($violations)) {
