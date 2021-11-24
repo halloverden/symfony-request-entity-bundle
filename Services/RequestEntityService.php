@@ -6,6 +6,7 @@ namespace HalloVerden\RequestEntityBundle\Services;
 
 use HalloVerden\HttpExceptions\Utility\ValidationException;
 use HalloVerden\RequestEntityBundle\Event\PreRequestEntityDeserializationEvent;
+use HalloVerden\RequestEntityBundle\Interfaces\PostDeserializeValidationInterface;
 use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityInterface;
 use HalloVerden\RequestEntityBundle\Interfaces\RequestEntityServiceInterface;
 use JMS\Serializer\SerializerInterface;
@@ -109,7 +110,7 @@ class RequestEntityService implements RequestEntityServiceInterface {
    * @return RequestEntityInterface
    */
   private function _createRequestEntity(array $data, Request $request, string $requestEntityClass): RequestEntityInterface {
-    /** @var RequestEntityInterface $requestEntityClass only as string! */
+    /** @var RequestEntityInterface|string $requestEntityClass */
     $context = $requestEntityClass::createDeserializationContext();
 
     $event = new PreRequestEntityDeserializationEvent(
@@ -123,6 +124,14 @@ class RequestEntityService implements RequestEntityServiceInterface {
     $requestEntity = $this->serializer->deserialize(json_encode($event->getData()), $event->getClass(), 'json', $event->getContext());
 
     $requestEntity->setRequest($request);
+
+    if ($requestEntity instanceof PostDeserializeValidationInterface) {
+      $this->validator->validate(
+        $requestEntity,
+        $requestEntity->getPostDeserializeValidationOptions()->getDataConstraint(),
+        $requestEntity->getPostDeserializeValidationOptions()->getDataValidatorGroups()
+      );
+    }
 
     return $requestEntity;
   }
