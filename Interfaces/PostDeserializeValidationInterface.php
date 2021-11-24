@@ -4,8 +4,6 @@
 namespace HalloVerden\RequestEntityBundle\Interfaces;
 
 
-use HalloVerden\HttpExceptions\Utility\ValidationException;
-
 /**
  * Interface PostDeserializeValidationInterface
  *
@@ -14,8 +12,8 @@ use HalloVerden\HttpExceptions\Utility\ValidationException;
 interface PostDeserializeValidationInterface {
 
   /**
-   * @return RequestDataValidationOptionsInterface
+   * @return array|null
    */
-  public function getPostDeserializeValidationOptions(): RequestDataValidationOptionsInterface;
+  public function getDataValidatorGroups(): ?array;
 
 }
