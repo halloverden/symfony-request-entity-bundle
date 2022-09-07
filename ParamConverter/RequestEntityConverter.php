@@ -31,14 +31,14 @@ class RequestEntityConverter implements ParamConverterInterface {
   /**
    * @inheritDoc
    */
-  public function supports( ParamConverter $configuration ) {
+  public function supports( ParamConverter $configuration ): bool {
     return \is_subclass_of($configuration->getClass(), RequestEntityInterface::class);
   }
 
   /**
    * @inheritDoc
    */
-  public function apply( Request $request, ParamConverter $configuration ) {
+  public function apply( Request $request, ParamConverter $configuration ): bool {
     $requestEntity = $this->requestEntityService->createRequestEntity($request, $configuration->getClass());
 
     $request->attributes->set($configuration->getName(), $requestEntity);
