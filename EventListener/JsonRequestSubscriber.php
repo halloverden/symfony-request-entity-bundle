@@ -29,7 +29,7 @@ class JsonRequestSubscriber implements EventSubscriberInterface {
   /**
    * @inheritDoc
    */
-  public static function getSubscribedEvents() {
+  public static function getSubscribedEvents(): array {
     return [
       KernelEvents::REQUEST => ['onKernelRequest', 30]
     ];
