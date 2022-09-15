@@ -75,7 +75,7 @@ class RequestEntityService implements RequestEntityServiceInterface {
     $requestEntityOptions = $requestEntityClass::createRequestEntityOptions();
 
     if (null !== $rootElement = $requestEntityOptions->getRootElement()) {
-      $data = $request->request->get( $rootElement ) ?? [];
+      $data = $request->request->has($rootElement) ? $request->request->all($rootElement) : [];
     } else {
       $data = $request->request->all();
     }
