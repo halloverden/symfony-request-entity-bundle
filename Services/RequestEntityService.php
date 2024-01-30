@@ -15,38 +15,19 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class RequestEntityService
- *
  * @package HalloVerden\RequestEntityBundle\Services
  */
 class RequestEntityService implements RequestEntityServiceInterface {
-
   /**
-   * @var SerializerInterface
-   */
-  private $serializer;
-
-  /**
-   * @var EventDispatcherInterface
-   */
-  private $dispatcher;
-
-  /**
-   * @var ValidatorInterface|null
-   */
-  private $validator;
-
-  /**
-   * RequestEntityConverter constructor.
-   *
-   * @param SerializerInterface      $serializer
+   * @param SerializerInterface $serializer
    * @param EventDispatcherInterface $dispatcher
-   * @param ValidatorInterface  $validator
+   * @param ValidatorInterface $validator
    */
-  public function __construct(SerializerInterface $serializer, EventDispatcherInterface $dispatcher, ValidatorInterface $validator) {
-    $this->serializer = $serializer;
-    $this->dispatcher = $dispatcher;
-    $this->validator = $validator;
+  public function __construct(
+    private readonly SerializerInterface $serializer,
+    private readonly EventDispatcherInterface $dispatcher,
+    private readonly ValidatorInterface $validator
+  ) {
   }
 
   /**
@@ -66,7 +47,7 @@ class RequestEntityService implements RequestEntityServiceInterface {
 
   /**
    * @param Request $request
-   * @param string  $requestEntityClass
+   * @param string $requestEntityClass
    *
    * @return array
    */
@@ -80,7 +61,7 @@ class RequestEntityService implements RequestEntityServiceInterface {
       $data = $request->request->all();
     }
 
-    if ( $requestEntityOptions->combineQueryAndBody() ) {
+    if ($requestEntityOptions->combineQueryAndBody()) {
       $data = array_merge($request->query->all(), $data);
     }
 
@@ -88,7 +69,7 @@ class RequestEntityService implements RequestEntityServiceInterface {
   }
 
   /**
-   * @param array  $data
+   * @param array $data
    * @param string $requestEntityClass
    */
   private function validateData(array $data, string $requestEntityClass): void {
@@ -103,9 +84,9 @@ class RequestEntityService implements RequestEntityServiceInterface {
   }
 
   /**
-   * @param array   $data
+   * @param array $data
    * @param Request $request
-   * @param string  $requestEntityClass
+   * @param string $requestEntityClass
    *
    * @return RequestEntityInterface
    */
@@ -141,7 +122,7 @@ class RequestEntityService implements RequestEntityServiceInterface {
   }
 
   /**
-   * @param array  $data
+   * @param array $data
    * @param string $requestEntityClass
    *
    * @return array

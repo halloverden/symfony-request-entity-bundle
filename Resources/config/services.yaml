@@ -6,11 +6,9 @@ services:
             $dispatcher: '@event_dispatcher'
             $validator: '@validator'
 
-    HalloVerden\RequestEntityBundle\ParamConverter\RequestEntityConverter:
+    HalloVerden\RequestEntityBundle\ValueResolvers\RequestEntityResolver:
         arguments:
             $requestEntityService: '@HalloVerden\RequestEntityBundle\Interfaces\RequestEntityServiceInterface'
-        tags:
-            - { name: request.param_converter, converter: HalloVerden\RequestEntityBundle\ParamConverter\RequestEntityConverter }
 
     HalloVerden\RequestEntityBundle\EventListener\JsonRequestSubscriber:
         tags:

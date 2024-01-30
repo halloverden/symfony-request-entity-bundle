@@ -6,11 +6,6 @@ use HalloVerden\RequestEntityBundle\Requests\RequestEntityOptions;
 use JMS\Serializer\DeserializationContext;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * Interface RequestEntityInterface
- *
- * @package HalloVerden\RequestEntityBundle\Interfaces
- */
 interface RequestEntityInterface {
 
   /**

@@ -1,16 +1,9 @@
 <?php
 
-
 namespace HalloVerden\RequestEntityBundle\Interfaces;
-
 
 use Symfony\Component\Validator\Constraint;
 
-/**
- * Interface RequestDataValidationInterface
- *
- * @package HalloVerden\RequestEntityBundle\Interfaces
- */
 interface RequestDataValidationOptionsInterface {
 
   /**

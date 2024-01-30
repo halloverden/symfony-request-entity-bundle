@@ -9,17 +9,8 @@ use JMS\Serializer\DeserializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Collection;
 
-/**
- * Class AbstractRequestEntity
- *
- * @package HalloVerden\RequestEntityBundle\Requests
- */
 abstract class AbstractRequestEntity implements RequestEntityInterface {
-
-  /**
-   * @var Request
-   */
-  private $_request;
+  private Request $_request;
 
   /**
    * @inheritDoc

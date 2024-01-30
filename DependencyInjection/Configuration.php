@@ -1,8 +1,6 @@
 <?php
 
-
 namespace HalloVerden\RequestEntityBundle\DependencyInjection;
-
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;

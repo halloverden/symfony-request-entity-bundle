@@ -1,24 +1,10 @@
 <?php
 
-
 namespace HalloVerden\RequestEntityBundle\Requests;
 
-/**
- * Class RequestEntityOptions
- *
- * @package HalloVerden\RequestEntityBundle\Requests
- */
 class RequestEntityOptions {
-
-  /**
-   * @var boolean
-   */
-  private $combineQueryAndBody = false;
-
-  /**
-   * @var string|null
-   */
-  private $rootElement = null;
+  private bool $combineQueryAndBody = false;
+  private string|null $rootElement = null;
 
   /**
    * @return static

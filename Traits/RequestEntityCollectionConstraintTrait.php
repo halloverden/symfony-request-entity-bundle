@@ -8,17 +8,9 @@ use Symfony\Component\Validator\Constraints\Collection;
 
 /**
  * Useful to prevent recreating the collection constraint on every call to getCollectionConstraint.
- *
- * Trait RequestEntityCollectionConstraintTrait
- *
- * @package HalloVerden\RequestEntityBundle\Traits
  */
 trait RequestEntityCollectionConstraintTrait {
-
-  /**
-   * @var Collection|null
-   */
-  private static $_collectionConstraint = null;
+  private static Collection|null $_collectionConstraint = null;
 
   /**
    * @return Collection

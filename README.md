@@ -50,41 +50,28 @@ Usage
 1. Create a class that extends `AbstractRequestEntity`. example:
    ```php
    <?php
-   
-   
+
    namespace App\Entity\Requests;
    
    use App\Entity\Yoo;
    use HalloVerden\RequestEntityBundle\Requests\AbstractRequestEntity;
-   use JMS\Serializer\Annotation as Serializer;
+   use JMS\Serializer\Annotation\ExclusionPolicy;
+   use JMS\Serializer\Annotation\Expose;
+   use JMS\Serializer\Annotation\SerializedName;
+   use JMS\Serializer\Annotation\Type;
    use Symfony\Component\Validator\Constraints as Assert;
-   
-   /**
-    * Class TestRequest
-    *
-    * @package App\Entity\Requests
-    *
-    * @Serializer\ExclusionPolicy("ALL")
-    */
+
+   #[ExclusionPolicy(ExclusionPolicy::ALL)]
    class TestRequest extends AbstractRequestEntity {
-   
-     /**
-      * @var array|null
-      *
-      * @Serializer\SerializedName("test")
-      * @Serializer\Type(name="array")
-      * @Serializer\Expose()
-      */
+     #[SerializedName(name: 'test')]
+     #[Type(name: 'array')]
+     #[Expose()]
      private $test;
    
-     /**
-      * @var Yoo
-      *
-      * @Serializer\SerializedName("yoo")
-      * @Serializer\Type(name="App\Entity\Yoo")
-      * @Serializer\Expose()
-      */
-     private $yoo;
+     #[SerializedName(name: 'yoo')]
+     #[Type(name: 'App\Entity\Yoo')]
+     #[Expose()]
+     private Yoo $yoo;
    
      /**
       * @return array|null
@@ -108,46 +95,31 @@ Usage
          ])
        ];
      }
-   
    }
    ```
    Override the `getRequestDataValidationFields` method to validate the request data.
    These validation rules must match the incoming request which is an array (i.e. after decoding a json request)
 
- 2. In your controller inject this request class using the paramconverter. Example:
+ 2. In your controller inject this request class using the ValueResolver. Example:
     ```php
     <?php
     
-    
     namespace App\Controller;
     
-    
     use App\Entity\Requests\TestRequest;
-    use App\Response\TestResponse;
+    use App\Entity\Response\TestResponse;
+    use HalloVerden\RequestEntityBundle\ValueResolvers\RequestEntityResolver;
     use HalloVerden\ResponseEntityBundle\Controller\AbstractResponseEntityController;
-    use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
     use Symfony\Component\HttpFoundation\JsonResponse;
     use Symfony\Component\Routing\Annotation\Route;
     
-    /**
-     * Class Test2Controller
-     *
-     * @package App\Controller
-     *
-     * @Route("/test2", methods={"POST"}, name="testpost")
-     */
+    #[Route(path: '/test2', name: 'testpost', methods: [Request::METHOD_POST])]
     class Test2Controller extends AbstractResponseEntityController {
-    
-      /**
-       * @ParamConverter("testRequest", converter="HalloVerden\RequestEntityBundle\ParamConverter\RequestEntityConverter", class="App\Entity\Requests\TestRequest")
-       *
-       * @param TestRequest $testRequest
-       *
-       * @return JsonResponse
-       */
-      public function __invoke(TestRequest $testRequest): JsonResponse {
+      public function __invoke(
+        #[ValueResolver(RequestEntityResolver::class)]
+        TestRequest $testRequest
+      ): JsonResponse {
         return $this->createJsonResponse(new TestResponse($testRequest->getTest()));
       }
-    
     }
     ```

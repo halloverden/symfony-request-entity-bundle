@@ -9,12 +9,11 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 class HalloVerdenRequestEntityExtension extends Extension {
-
   /**
    * @inheritDoc
    * @throws \Exception
    */
-  public function load(array $configs, ContainerBuilder $container) {
+  public function load(array $configs, ContainerBuilder $container): void {
     $config = $this->processConfiguration(new Configuration(), $configs);
 
     $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

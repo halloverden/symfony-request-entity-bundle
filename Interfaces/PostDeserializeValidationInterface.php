@@ -1,14 +1,7 @@
 <?php
 
-
 namespace HalloVerden\RequestEntityBundle\Interfaces;
 
-
-/**
- * Interface PostDeserializeValidationInterface
- *
- * @package HalloVerden\RequestEntityBundle\Interfaces
- */
 interface PostDeserializeValidationInterface {
 
   /**

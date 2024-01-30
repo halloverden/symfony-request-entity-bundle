@@ -1,17 +1,10 @@
 <?php
 
-
 namespace HalloVerden\RequestEntityBundle\Helpers;
-
 
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\Existence;
 
-/**
- * Class CollectionConstraintHelper
- *
- * @package HalloVerden\RequestEntityBundle\Helpers
- */
 class CollectionConstraintHelper {
 
   /**
